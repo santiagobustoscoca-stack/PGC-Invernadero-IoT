@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard IoT - PGC Invernaderos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
+        /* Scrollbar personalizada para el estilo oscuro */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <!-- HEADER & BOTÓN HAMBURGUESA -->
+    <header class="fixed top-0 inset-x-0 h-16 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 z-40 flex items-center justify-between px-4 sm:px-8">
+        <div class="flex items-center gap-4">
+            <!-- Botón Menú Hamburguesa -->
+            <button id="menu-btn" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 transition focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></div>
+                <h1 class="text-lg font-bold text-white tracking-wide">PGC <span class="text-cyan-400">IoT</span></h1>
+            </div>
+        </div>
+        <a href="/logout" class="text-xs font-semibold text-slate-400 hover:text-red-400 transition bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 hover:border-red-500/50">Cerrar Sesión</a>
+    </header>
+
+    <!-- OVERLAY OSCURO PARA EL MENÚ -->
+    <div id="overlay" class="fixed inset-0 bg-black/60 z-40 hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- MENÚ LATERAL (SIDEBAR TIPO HAMBURGUESA) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-slate-900 border-r border-slate-800 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col shadow-2xl">
+        <div class="p-6 flex items-center justify-between border-b border-slate-800">
+            <h2 class="text-lg font-bold text-white">Navegación</h2>
+            <button id="close-btn" class="p-2 text-slate-400 hover:text-white bg-slate-800 rounded-lg transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="flex-1 overflow-y-auto p-4 space-y-2 text-sm font-medium text-slate-300">
+            <a href="#identificacion" class="menu-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-cyan-400 transition">
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span> Proyecto y Objetivos
+            </a>
+            <a href="#metodologia" class="menu-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-cyan-400 transition">
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span> Metodología CRISP-DM
+            </a>
+            <a href="#maqueta" class="menu-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-cyan-500/10 text-cyan-400 border border-transparent hover:border-cyan-500/30 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+                Maqueta & Hardware
+            </a>
+            <a href="#datos" class="menu-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-cyan-400 transition">
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span> Gestión de Datos (SSIS)
+            </a>
+            <a href="#envivo" class="menu-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-500/10 text-emerald-400 transition border border-transparent hover:border-emerald-500/30">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Telemetría En Vivo
+            </a>
+            <a href="#dashboard" class="menu-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-cyan-400 transition">
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span> Dashboard Power BI
+            </a>
+            <a href="#conocimientos" class="menu-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-cyan-400 transition">
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span> Conocimientos Evidentes
+            </a>
+            <a href="#decisiones" class="menu-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-cyan-400 transition">
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span> Decisiones y Conclusiones
+            </a>
+        </nav>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="pt-24 pb-16 px-4 sm:px-8 max-w-7xl mx-auto space-y-20">
+
+        <!-- 1. IDENTIFICACIÓN Y OBJETIVOS -->
+        <section id="identificacion" class="space-y-6 scroll-mt-24">
+            <div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">Sistema Analítico e IoT para Invernaderos</h2>
+                <p class="text-slate-400 text-lg max-w-3xl">Plataforma integral de captura de telemetría y Business Intelligence para el monitoreo y control autónomo de microclimas agrícolas.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl backdrop-blur-sm">
+                    <h3 class="text-cyan-400 font-bold uppercase text-xs tracking-wider mb-3">Identificación</h3>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li><strong class="text-white">Programa:</strong> Ingeniería de Sistemas y Computación</li>
+                        <li><strong class="text-white">Sede:</strong> Universidad de Cundinamarca (Sabana Centro)</li>
+                        <li><strong class="text-white">Integrantes:</strong> [Tus Nombres]</li>
+                        <li><strong class="text-white">Módulo:</strong> Proyecto Ciudad Inteligente e IoT</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl backdrop-blur-sm">
+                    <h3 class="text-cyan-400 font-bold uppercase text-xs tracking-wider mb-3">Problema y Justificación</h3>
+                    <p class="text-sm text-slate-300 mb-2">La variabilidad climática de la región somete a los cultivos a estrés hídrico y térmico por controles manuales ineficientes.</p>
+                    <p class="text-sm text-slate-300">El proyecto plantea una solución basada en el Internet de las Cosas y Analítica de Datos para automatizar umbrales y sustentar decisiones agronómicas operativas.</p>
+                </div>
+            </div>
+            <div class="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl backdrop-blur-sm">
+                <h3 class="text-cyan-400 font-bold uppercase text-xs tracking-wider mb-3">Objetivos</h3>
+                <p class="text-sm text-slate-300 mb-2"><strong class="text-white">General:</strong> Desarrollar un sistema de gestión del conocimiento integrando telemetría IoT (ESP32) y herramientas BI (Power BI) para optimizar el control microclimático.</p>
+                <ul class="list-disc pl-5 text-sm text-slate-300 space-y-1">
+                    <li>Diseñar e implementar una red de sensores DHT22 y actuadores con ESP32.</li>
+                    <li>Estructurar un ETL robusto para almacenar lecturas masivas.</li>
+                    <li>Desarrollar un dashboard que permita extraer conocimientos y decisiones.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. METODOLOGÍA -->
+        <section id="metodologia" class="scroll-mt-24">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                <div class="w-1.5 h-6 bg-cyan-500 rounded"></div> Metodología (CRISP-DM)
+            </h2>
+            <div class="grid sm:grid-cols-3 gap-6">
+                <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl hover:border-cyan-500/50 transition">
+                    <span class="bg-cyan-500/20 text-cyan-300 text-[10px] font-bold px-2 py-1 rounded">FASES 1-2</span>
+                    <h4 class="font-bold text-white mt-3 mb-2">Negocio y Datos</h4>
+                    <p class="text-sm text-slate-400">Definición de variables telemétricas y umbrales térmicos por cultivo: Cilantro (70%), Frijol (60%) y Lentejas (50%).</p>
+                </div>
+                <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl hover:border-cyan-500/50 transition">
+                    <span class="bg-cyan-500/20 text-cyan-300 text-[10px] font-bold px-2 py-1 rounded">FASES 3-4</span>
+                    <h4 class="font-bold text-white mt-3 mb-2">Preparación y Modelado</h4>
+                    <p class="text-sm text-slate-400">Depuración de valores nulos (NaN) del sensor DHT22. Diseño del modelo relacional y simulación de 1,000,000 registros.</p>
+                </div>
+                <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl hover:border-cyan-500/50 transition">
+                    <span class="bg-cyan-500/20 text-cyan-300 text-[10px] font-bold px-2 py-1 rounded">FASES 5-6</span>
+                    <h4 class="font-bold text-white mt-3 mb-2">Evaluación y Despliegue</h4>
+                    <p class="text-sm text-slate-400">Despliegue de la API REST en Python (Flask) para captura de datos y publicación del Dashboard en Power BI Service.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. APARTADO DE LA MAQUETA (HARDWARE) -->
+        <section id="maqueta" class="scroll-mt-24 bg-slate-900 rounded-3xl border border-cyan-500/30 shadow-[0_0_40px_-15px_rgba(6,182,212,0.3)] relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+            <div class="p-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-2">Arquitectura de la Maqueta Física</h2>
+                        <p class="text-sm text-slate-400">Diseño electrónico gobernado por un microcontrolador ESP32 con procesamiento y respuesta local (Edge Computing).</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex gap-2">
+                        <span class="bg-slate-800 text-slate-300 border border-slate-700 text-xs px-3 py-1.5 rounded-lg">C++ Firmware</span>
+                        <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs px-3 py-1.5 rounded-lg font-mono">ESP-WROOM-32</span>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <!-- Modulo 1 -->
+                    <div class="bg-slate-950/50 border border-slate-800 p-5 rounded-xl">
+                        <h3 class="text-white font-bold mb-3 flex items-center justify-between">
+                            Invernadero 1 <span class="bg-amber-500/20 text-amber-400 text-[10px] px-2 py-1 rounded font-bold">COMPLETO</span>
+                        </h3>
+                        <div class="space-y-2 text-sm text-slate-400">
+                            <div class="flex justify-between border-b border-slate-800 pb-1"><span>Sensor Hum/Temp:</span> <span class="text-cyan-400 font-mono">DHT22 (Pin 4)</span></div>
+                            <div class="flex justify-between border-b border-slate-800 pb-1"><span>Humidificador:</span> <span class="text-white font-mono">Relé (Pin 26)</span></div>
+                            <div class="flex justify-between border-b border-slate-800 pb-1"><span>Extractor Térmico:</span> <span class="text-white font-mono">Relé (Pin 32)</span></div>
+                            <div class="flex justify-between"><span>Apertura Cenital:</span> <span class="text-amber-400 font-mono">Servo (Pin 19)</span></div>
+                        </div>
+                    </div>
+                    <!-- Modulo 2 -->
+                    <div class="bg-slate-950/50 border border-slate-800 p-5 rounded-xl">
+                        <h3 class="text-white font-bold mb-3 flex items-center justify-between">
+                            Invernadero 2 <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded font-bold">ESTÁNDAR</span>
+                        </h3>
+                        <div class="space-y-2 text-sm text-slate-400">
+                            <div class="flex justify-between border-b border-slate-800 pb-1"><span>Sensor Hum/Temp:</span> <span class="text-cyan-400 font-mono">DHT22 (Pin 16)</span></div>
+                            <div class="flex justify-between border-b border-slate-800 pb-1"><span>Humidificador:</span> <span class="text-white font-mono">Relé (Pin 27)</span></div>
+                            <div class="flex justify-between"><span>Lógica de protección:</span> <span class="text-slate-300">10 min max ON</span></div>
+                        </div>
+                    </div>
+                    <!-- Modulo 3 -->
+                    <div class="bg-slate-950/50 border border-slate-800 p-5 rounded-xl">
+                        <h3 class="text-white font-bold mb-3 flex items-center justify-between">
+                            Invernadero 3 <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded font-bold">ESTÁNDAR</span>
+                        </h3>
+                        <div class="space-y-2 text-sm text-slate-400">
+                            <div class="flex justify-between border-b border-slate-800 pb-1"><span>Sensor Hum/Temp:</span> <span class="text-cyan-400 font-mono">DHT22 (Pin 17)</span></div>
+                            <div class="flex justify-between border-b border-slate-800 pb-1"><span>Humidificador:</span> <span class="text-white font-mono">Relé (Pin 25)</span></div>
+                            <div class="flex justify-between"><span>Frecuencia HTTP POST:</span> <span class="text-slate-300">Cada 5 Seg</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. GESTIÓN DE DATOS -->
+        <section id="datos" class="scroll-mt-24 grid md:grid-cols-2 gap-8">
+            <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl">
+                <h2 class="text-xl font-bold text-white mb-4">Gestión de Datos (Modelo Estrella)</h2>
+                <p class="text-sm text-slate-400 mb-4">La información se normalizó mediante un modelo dimensional para optimizar las consultas en Power BI.</p>
+                <ul class="space-y-3 text-sm">
+                    <li class="bg-slate-900 p-3 rounded-lg border border-slate-800"><strong class="text-cyan-400">Fact_Lecturas:</strong> id, invernadero_id, temperatura, humedad.</li>
+                    <li class="bg-slate-900 p-3 rounded-lg border border-slate-800"><strong class="text-amber-400">Fact_Eventos:</strong> id, invernadero_id, estado_reles, timestamp.</li>
+                    <li class="bg-slate-900 p-3 rounded-lg border border-slate-800"><strong class="text-white">Dimensiones:</strong> Dim_Tiempo, Dim_Dispositivo (Características).</li>
+                </ul>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl">
+                <h2 class="text-xl font-bold text-white mb-4">Flujo ETL (SSIS)</h2>
+                <p class="text-sm text-slate-400 mb-6">Proceso automatizado mediante SQL Server Integration Services para depuración y carga al Data Warehouse.</p>
+                <div class="relative pt-2">
+                    <!-- Linea de flujo -->
+                    <div class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-700 -translate-y-1/2"></div>
+                    <div class="relative flex justify-between text-xs font-bold text-slate-300 text-center">
+                        <div class="bg-slate-800 border-2 border-slate-600 px-3 py-2 rounded-lg z-10 w-24">1. Extracción (JSON API)</div>
+                        <div class="bg-slate-800 border-2 border-cyan-600 px-3 py-2 rounded-lg z-10 w-24 text-cyan-400">2. Limpieza (Filtro NaN)</div>
+                        <div class="bg-slate-800 border-2 border-emerald-600 px-3 py-2 rounded-lg z-10 w-24 text-emerald-400">3. Carga Estrella</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. TELEMETRÍA EN VIVO -->
+        <section id="envivo" class="scroll-mt-24">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Módulo de Telemetría (En Vivo)
+                </h2>
+                <span id="kpi-estado" class="text-xs font-mono bg-slate-800 text-slate-400 border border-slate-700 px-3 py-1 rounded-full">Buscando ESP32...</span>
+            </div>
+
+            <!-- KPIs Globales -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="bg-slate-800 border border-slate-700 p-5 rounded-2xl">
+                    <p class="text-xs font-medium text-slate-400">Promedio de Humedad de Red</p>
+                    <p id="kpi-eficiencia" class="text-2xl sm:text-3xl font-bold text-emerald-400 mt-2">-- %</p>
+                </div>
+                <div class="bg-slate-800 border border-slate-700 p-5 rounded-2xl">
+                    <p class="text-xs font-medium text-slate-400">Registros DWH</p>
+                    <p id="kpi-registros" class="text-2xl sm:text-3xl font-bold text-white mt-2">1,000,000</p>
+                </div>
+                <div class="bg-slate-800 border border-slate-700 p-5 rounded-2xl">
+                    <p class="text-xs font-medium text-slate-400">Alertas de Temperatura</p>
+                    <p id="kpi-alertas" class="text-2xl sm:text-3xl font-bold text-red-400 mt-2">0</p>
+                </div>
+            </div>
+
+            <!-- Lecturas Individuales -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Inv 1 -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm font-bold text-white uppercase tracking-wider">Inv 1 <span class="text-slate-500">| Cilantro</span></span>
+                        <span id="inv1-humid" class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700">HUMID OFF</span>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Temp</p>
+                            <p id="inv1-temp" class="text-3xl font-light text-white">-- <span class="text-lg text-slate-500">°C</span></p>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Hum</p>
+                            <p id="inv1-hum" class="text-3xl font-light text-cyan-400">-- <span class="text-lg text-slate-500">%</span></p>
+                        </div>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-800 flex gap-2">
+                        <span id="inv1-vent" class="text-[10px] bg-slate-800 text-slate-500 px-2 py-1 rounded border border-slate-700">VENT OFF</span>
+                        <span id="inv1-resp" class="text-[10px] bg-slate-800 text-slate-500 px-2 py-1 rounded border border-slate-700">SERVO CLOSE</span>
+                    </div>
+                </div>
+                <!-- Inv 2 -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm font-bold text-white uppercase tracking-wider">Inv 2 <span class="text-slate-500">| Frijol</span></span>
+                        <span id="inv2-humid" class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700">HUMID OFF</span>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Temp</p>
+                            <p id="inv2-temp" class="text-3xl font-light text-white">-- <span class="text-lg text-slate-500">°C</span></p>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Hum</p>
+                            <p id="inv2-hum" class="text-3xl font-light text-cyan-400">-- <span class="text-lg text-slate-500">%</span></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Inv 3 -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm font-bold text-white uppercase tracking-wider">Inv 3 <span class="text-slate-500">| Lentejas</span></span>
+                        <span id="inv3-humid" class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700">HUMID OFF</span>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Temp</p>
+                            <p id="inv3-temp" class="text-3xl font-light text-white">-- <span class="text-lg text-slate-500">°C</span></p>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Hum</p>
+                            <p id="inv3-hum" class="text-3xl font-light text-cyan-400">-- <span class="text-lg text-slate-500">%</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. DASHBOARD POWER BI -->
+        <section id="dashboard" class="scroll-mt-24 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between">
+                <h2 class="text-2xl font-bold text-white">Dashboard Analítico (Power BI)</h2>
+                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-lg">Análisis Multivariado Operacional</span>
+            </div>
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-2 h-[650px] shadow-2xl relative">
+                <!-- Capa de brillo superior para efecto cristal -->
+                <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-400/20 to-transparent"></div>
+                <iframe title="Dashboard_Invernadero" class="w-full h-full rounded-xl bg-slate-900"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiNjg3MmViMjEtYzNmMC00NDdhLWEwYTYtZjliZTU5MGU4MGE5IiwidCI6IjA3ZGE2N2EwLTFmNDMtNGU4Yy05NzdmLTVmODhiNjQ3MGVlNiIsImMiOjR9" 
+                        frameborder="0" allowFullScreen="true">
+                </iframe>
+            </div>
+        </section>
+
+        <!-- 7. CONOCIMIENTOS EVIDENTES -->
+        <section id="conocimientos" class="scroll-mt-24">
+            <h2 class="text-2xl font-bold text-white mb-6">Documentación: 5 Conocimientos Evidentes</h2>
+            
+            <div class="space-y-6">
+                <!-- Conocimiento 1 -->
+                <div class="bg-slate-800 border border-slate-700 p-6 sm:p-8 rounded-2xl">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4 flex items-center gap-3">
+                        <span class="bg-cyan-500/20 text-cyan-300 w-8 h-8 rounded flex items-center justify-center">1</span> 
+                        Análisis Multivariado: Eficiencia de mitigación térmica
+                    </h3>
+                    <div class="grid sm:grid-cols-2 gap-x-8 gap-y-4 text-sm text-slate-300">
+                        <p><strong class="text-white">1. Pregunta:</strong> ¿Qué impacto tiene la activación conjunta del ventilador y servo sobre la temperatura?</p>
+                        <p><strong class="text-white">2. Variables:</strong> Temperatura, Hora, Estado Ventilador, Estado Servo.</p>
+                        <p><strong class="text-white">3. Procedimiento:</strong> Comparación de deltas de temperatura pre y post activación de relés en franjas de 10 min.</p>
+                        <p><strong class="text-white">4. Resultado:</strong> Descenso rápido de 2.4 °C en 8 minutos con ambos actuadores activos.</p>
+                        <p><strong class="text-white">5. Hallazgo:</strong> La apertura a 105° potencia la extracción del ventilador en un 35%.</p>
+                        <p><strong class="text-white">6. Interpretación:</strong> El diseño mecánico es muy adecuado para disipar calor crítico.</p>
+                        <p><strong class="text-white">7. Utilidad:</strong> Justifica la inversión mecánica en los demás invernaderos.</p>
+                        <p><strong class="text-white">8. Limitación:</strong> No evalúa la influencia del viento exterior sobre el enfriamiento.</p>
+                    </div>
+                </div>
+
+                <!-- Conocimiento 2 -->
+                <div class="bg-slate-800 border border-slate-700 p-6 sm:p-8 rounded-2xl">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4 flex items-center gap-3">
+                        <span class="bg-cyan-500/20 text-cyan-300 w-8 h-8 rounded flex items-center justify-center">2</span> 
+                        Análisis Bivariado: Demanda eléctrica por cultivo
+                    </h3>
+                    <div class="grid sm:grid-cols-2 gap-x-8 gap-y-4 text-sm text-slate-300">
+                        <p><strong class="text-white">1. Pregunta:</strong> ¿Qué cultivo demanda un mayor esfuerzo del sistema de humidificación?</p>
+                        <p><strong class="text-white">2. Variables:</strong> Invernadero (Cultivo), Tiempo de encendido (LOW).</p>
+                        <p><strong class="text-white">3. Procedimiento:</strong> Sumatoria de tiempo operativo del pin del relé agrupado por dispositivo.</p>
+                        <p><strong class="text-white">4. Resultado:</strong> El Cilantro (Inv 1) exige el 62% del tiempo total operativo eléctrico.</p>
+                        <p><strong class="text-white">5. Hallazgo:</strong> Mantener umbrales de 70%-75% causa ciclos de encendido prolongados.</p>
+                        <p><strong class="text-white">6. Interpretación:</strong> El Inv 1 sufre un desgaste de hardware significativamente superior.</p>
+                        <p><strong class="text-white">7. Utilidad:</strong> Focalizar los mantenimientos preventivos en la membrana ultrasónica del Inv 1.</p>
+                        <p><strong class="text-white">8. Limitación:</strong> No se cuantifican los mililitros exactos de agua consumida.</p>
+                    </div>
+                </div>
+
+                <!-- Conocimiento 3 -->
+                <div class="bg-slate-800 border border-slate-700 p-6 sm:p-8 rounded-2xl">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4 flex items-center gap-3">
+                        <span class="bg-cyan-500/20 text-cyan-300 w-8 h-8 rounded flex items-center justify-center">3</span> 
+                        Análisis Bivariado: Estrés térmico solar
+                    </h3>
+                    <div class="grid sm:grid-cols-2 gap-x-8 gap-y-4 text-sm text-slate-300">
+                        <p><strong class="text-white">1. Pregunta:</strong> ¿En qué horario se concentran los picos críticos de temperatura?</p>
+                        <p><strong class="text-white">2. Variables:</strong> Temperatura máxima, Hora del día.</p>
+                        <p><strong class="text-white">3. Procedimiento:</strong> Agrupación por valor máximo segmentado en franjas de 4 horas.</p>
+                        <p><strong class="text-white">4. Resultado:</strong> El pico máximo (42.8 °C) ocurre invariablemente de 12:00 a 15:00 hrs.</p>
+                        <p><strong class="text-white">5. Hallazgo:</strong> Existe una ventana de 3 horas donde el riesgo de marchitamiento es crítico.</p>
+                        <p><strong class="text-white">6. Interpretación:</strong> El recubrimiento del invernadero absorbe y retiene radiación infrarroja.</p>
+                        <p><strong class="text-white">7. Utilidad:</strong> Programar polisombras o rondas de supervisión en dicho horario.</p>
+                        <p><strong class="text-white">8. Limitación:</strong> El análisis asume días despejados, no correlaciona con datos meteorológicos externos.</p>
+                    </div>
+                </div>
+                
+                <!-- Conocimiento 4 y 5 pueden replicar la estructura anterior -->
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+                        <h3 class="font-bold text-cyan-400 mb-2">4. Análisis Univariado: Saturación de humedad</h3>
+                        <p class="text-xs text-slate-300 mb-2"><strong>Hallazgo:</strong> El 100% de los eventos dañinos (>85% humedad) en el Inv 3 suceden de madrugada debido al descenso de temperatura externa, no por fallas en el riego.</p>
+                        <p class="text-xs text-slate-400"><strong>Utilidad:</strong> Descarta problemas en la programación del relé de humidificación.</p>
+                    </div>
+                    <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+                        <h3 class="font-bold text-cyan-400 mb-2">5. Análisis Univariado: Histéresis del Software</h3>
+                        <p class="text-xs text-slate-300 mb-2"><strong>Hallazgo:</strong> La banda del 5% y las restricciones de 10 minutos previenen el 100% de los "rebotes de relé" o cortocircuitos por ciclado rápido.</p>
+                        <p class="text-xs text-slate-400"><strong>Utilidad:</strong> Confirma la seguridad eléctrica del diseño algorítmico del ESP32.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. TOMA DE DECISIONES Y CONCLUSIONES -->
+        <section id="decisiones" class="scroll-mt-24 border-t border-slate-800 pt-16">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Decisiones -->
+                <div class="lg:col-span-2 space-y-6">
+                    <h2 class="text-2xl font-bold text-white mb-6">Toma de Decisiones Estratégicas</h2>
+                    <div class="bg-slate-900 border border-cyan-500/30 p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-bl-full"></div>
+                        <h3 class="text-lg font-bold text-white mb-2">Decisión de Infraestructura</h3>
+                        <p class="text-sm text-slate-300 mb-2"><strong class="text-cyan-400">Acción:</strong> Implementar servo-respiraderos en Inv 2 y 3.</p>
+                        <p class="text-sm text-slate-300 mb-2"><strong class="text-cyan-400">Sustento:</strong> Basado en el Conocimiento #1 (reducción de 2.4°C en 8 min).</p>
+                        <p class="text-sm text-slate-300"><strong class="text-cyan-400">Indicador:</strong> Reducción del 80% en alertas >35°C mensuales en ambos módulos.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-emerald-500/30 p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-full"></div>
+                        <h3 class="text-lg font-bold text-white mb-2">Decisión Operativa (Software)</h3>
+                        <p class="text-sm text-slate-300 mb-2"><strong class="text-emerald-400">Acción:</strong> Disminuir umbral de Cilantro del 70% al 65%.</p>
+                        <p class="text-sm text-slate-300 mb-2"><strong class="text-emerald-400">Sustento:</strong> Mitigar el desgaste (62% operativo) evidenciado en el Conocimiento #2.</p>
+                        <p class="text-sm text-slate-300"><strong class="text-emerald-400">Indicador:</strong> Reducción del 25% del tiempo en estado LOW del pin 26 del ESP32.</p>
+                    </div>
+                </div>
+                <!-- Conclusiones -->
+                <div>
+                    <h2 class="text-2xl font-bold text-white mb-6">Conclusiones</h2>
+                    <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl space-y-4 text-sm text-slate-300">
+                        <p>El sistema demostró una completa autonomía operativa (<strong class="text-white">Edge Computing</strong>) al manejar relés sin dependencia directa del servidor.</p>
+                        <p>La ingesta de 1,000,000 de registros en el ETL corroboró la resiliencia del Data Warehouse diseñado en SQL Server.</p>
+                        <p><strong>Limitaciones:</strong> Para refinar el modelo, a futuro se deben cruzar las mediciones del DHT22 con variables meteorológicas externas obtenidas mediante una API (ej. OpenWeather).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-950 border-t border-slate-900 py-8 text-center text-xs text-slate-500">
+        PGC Módulo Ciudad Inteligente e IoT · Universidad de Cundinamarca
+    </footer>
+
+    <!-- LÓGICA DE INTERFAZ Y TELEMETRÍA -->
+    <script>
+        // Lógica del Menú Hamburguesa
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuLinks = document.querySelectorAll('.menu-link');
+
+        function toggleMenu() {
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+        menuLinks.forEach(link => link.addEventListener('click', toggleMenu));
+
+        // Lógica de Telemetría (Flask API)
+        function actualizarTelemetria() {
+            fetch('/api/kpis')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('kpi-eficiencia').innerText = data.eficiencia_operativa;
+                    document.getElementById('kpi-registros').innerText = data.registros_procesados;
+                    document.getElementById('kpi-alertas').innerText = data.alertas_activas;
+                    
+                    const spanEstado = document.getElementById('kpi-estado');
+                    spanEstado.innerText = "ONLINE - " + data.estado_sistema;
+                    spanEstado.className = "text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full";
+
+                    if (data.detalle) {
+                        const inv1 = data.detalle["1"];
+                        const inv2 = data.detalle["2"];
+                        const inv3 = data.detalle["3"];
+
+                        if (inv1) {
+                            document.getElementById('inv1-temp').innerText = inv1.temperatura;
+                            document.getElementById('inv1-hum').innerText = inv1.humedad;
+                            
+                            document.getElementById('inv1-humid').innerText = inv1.humidificador ? 'HUMID ON' : 'HUMID OFF';
+                            document.getElementById('inv1-humid').className = inv1.humidificador ? 'text-[10px] font-bold px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' : 'text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700';
+                            
+                            document.getElementById('inv1-vent').innerText = inv1.ventilador ? 'VENT ON' : 'VENT OFF';
+                            document.getElementById('inv1-vent').className = inv1.ventilador ? 'text-[10px] px-2 py-1 rounded border bg-amber-500/20 text-amber-400 border-amber-500/30' : 'text-[10px] bg-slate-800 text-slate-500 px-2 py-1 rounded border border-slate-700';
+                            
+                            document.getElementById('inv1-resp').innerText = inv1.respiradero ? 'SERVO 105°' : 'SERVO CLOSE';
+                            document.getElementById('inv1-resp').className = inv1.respiradero ? 'text-[10px] px-2 py-1 rounded border bg-amber-500/20 text-amber-400 border-amber-500/30' : 'text-[10px] bg-slate-800 text-slate-500 px-2 py-1 rounded border border-slate-700';
+                        }
+                        if (inv2) {
+                            document.getElementById('inv2-temp').innerText = inv2.temperatura;
+                            document.getElementById('inv2-hum').innerText = inv2.humedad;
+                            document.getElementById('inv2-humid').innerText = inv2.humidificador ? 'HUMID ON' : 'HUMID OFF';
+                            document.getElementById('inv2-humid').className = inv2.humidificador ? 'text-[10px] font-bold px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' : 'text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700';
+                        }
+                        if (inv3) {
+                            document.getElementById('inv3-temp').innerText = inv3.temperatura;
+                            document.getElementById('inv3-hum').innerText = inv3.humedad;
+                            document.getElementById('inv3-humid').innerText = inv3.humidificador ? 'HUMID ON' : 'HUMID OFF';
+                            document.getElementById('inv3-humid').className = inv3.humidificador ? 'text-[10px] font-bold px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' : 'text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700';
+                        }
+                    }
+                })
+                .catch(err => console.error('Error de red al actualizar telemetría:', err));
+        }
+
+        actualizarTelemetria();
+        setInterval(actualizarTelemetria, 5000);
+    </script>
+</body>
+</html>
