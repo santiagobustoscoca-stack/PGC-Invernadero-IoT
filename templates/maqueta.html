@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Maqueta y Hardware - PGC Invernaderos{% endblock %}
+{% block content %}
+<div class="space-y-12">
+    <div>
+        <h2 class="text-3xl font-extrabold text-white mb-2">Arquitectura de la Maqueta Física</h2>
+        <p class="text-slate-400">Diseño electrónico gobernado por un microcontrolador ESP32 con procesamiento y respuesta local (Edge Computing).</p>
+    </div>
+
+    <!-- Contenedor principal de hardware -->
+    <div class="bg-slate-900 rounded-3xl border border-cyan-500/30 p-8 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-1">Módulos de Invernadero Controlados</h3>
+                <p class="text-sm text-slate-400">Red de adquisición de datos basada en sensores DHT22 y relés de estado sólido.</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex gap-2">
+                <span class="bg-slate-800 text-slate-300 border border-slate-700 text-xs px-3 py-1.5 rounded-lg">C++ Firmware</span>
+                <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs px-3 py-1.5 rounded-lg font-mono">ESP-WROOM-32</span>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6">
+            <!-- Invernadero 1 -->
+            <div class="bg-slate-950/60 border border-slate-800 p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-white font-bold">Invernadero 1</h4>
+                    <span class="bg-amber-500/20 text-amber-400 text-[10px] px-2 py-1 rounded font-bold">CILANTRO (70%)</span>
+                </div>
+                <div class="space-y-3 text-sm text-slate-400">
+                    <div class="flex justify-between border-b border-slate-800/80 pb-2"><span>Sensor Temp/Hum:</span> <span class="text-cyan-400 font-mono">DHT22 (Pin 4)</span></div>
+                    <div class="flex justify-between border-b border-slate-800/80 pb-2"><span>Humidificador:</span> <span class="text-white font-mono">Relé (Pin 26)</span></div>
+                    <div class="flex justify-between border-b border-slate-800/80 pb-2"><span>Extractor Térmico:</span> <span class="text-white font-mono">Relé (Pin 32)</span></div>
+                    <div class="flex justify-between"><span>Apertura Cenital:</span> <span class="text-amber-400 font-mono">Servo (Pin 19)</span></div>
+                </div>
+            </div>
+
+            <!-- Invernadero 2 -->
+            <div class="bg-slate-950/60 border border-slate-800 p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-white font-bold">Invernadero 2</h4>
+                    <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded font-bold">FRIJOL (60%)</span>
+                </div>
+                <div class="space-y-3 text-sm text-slate-400">
+                    <div class="flex justify-between border-b border-slate-800/80 pb-2"><span>Sensor Temp/Hum:</span> <span class="text-cyan-400 font-mono">DHT22 (Pin 16)</span></div>
+                    <div class="flex justify-between border-b border-slate-800/80 pb-2"><span>Humidificador:</span> <span class="text-white font-mono">Relé (Pin 27)</span></div>
+                    <div class="flex justify-between"><span>Lógica de protección:</span> <span class="text-slate-300">10 min max ON</span></div>
+                </div>
+            </div>
+
+            <!-- Invernadero 3 -->
+            <div class="bg-slate-950/60 border border-slate-800 p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-white font-bold">Invernadero 3</h4>
+                    <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded font-bold">LENTEJAS (50%)</span>
+                </div>
+                <div class="space-y-3 text-sm text-slate-400">
+                    <div class="flex justify-between border-b border-slate-800/80 pb-2"><span>Sensor Temp/Hum:</span> <span class="text-cyan-400 font-mono">DHT22 (Pin 17)</span></div>
+                    <div class="flex justify-between border-b border-slate-800/80 pb-2"><span>Humidificador:</span> <span class="text-white font-mono">Relé (Pin 25)</span></div>
+                    <div class="flex justify-between"><span>Protocolo HTTP:</span> <span class="text-slate-300">POST c/ 5 seg</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

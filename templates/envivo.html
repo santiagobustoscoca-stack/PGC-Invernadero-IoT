@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Telemetría en Vivo - PGC Invernaderos{% endblock %}
+{% block content %}
+<div class="space-y-8">
+    <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Módulo de Telemetría (En Vivo)
+        </h2>
+        <span id="kpi-estado" class="text-xs font-mono bg-slate-800 text-slate-400 border border-slate-700 px-3 py-1 rounded-full">Buscando ESP32...</span>
+    </div>
+
+    <!-- KPIs Globales -->
+    <div class="grid grid-cols-3 gap-4">
+        <div class="bg-slate-800 border border-slate-700 p-5 rounded-2xl">
+            <p class="text-xs font-medium text-slate-400">Promedio de Humedad de Red</p>
+            <p id="kpi-eficiencia" class="text-2xl sm:text-3xl font-bold text-emerald-400 mt-2">-- %</p>
+        </div>
+        <div class="bg-slate-800 border border-slate-700 p-5 rounded-2xl">
+            <p class="text-xs font-medium text-slate-400">Registros DWH</p>
+            <p id="kpi-registros" class="text-2xl sm:text-3xl font-bold text-white mt-2">1,000,000</p>
+        </div>
+        <div class="bg-slate-800 border border-slate-700 p-5 rounded-2xl">
+            <p class="text-xs font-medium text-slate-400">Alertas de Temperatura</p>
+            <p id="kpi-alertas" class="text-2xl sm:text-3xl font-bold text-red-400 mt-2">0</p>
+        </div>
+    </div>
+
+    <!-- Lecturas Individuales de los 3 Invernaderos -->
+    <div class="grid md:grid-cols-3 gap-6">
+        <!-- Inv 1 -->
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm font-bold text-white uppercase tracking-wider">Inv 1 <span class="text-slate-500">| Cilantro</span></span>
+                <span id="inv1-humid" class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700">HUMID OFF</span>
+            </div>
+            <div class="flex justify-between items-end">
+                <div>
+                    <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Temp</p>
+                    <p id="inv1-temp" class="text-3xl font-light text-white">-- <span class="text-lg text-slate-500">°C</span></p>
+                </div>
+                <div>
+                    <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Hum</p>
+                    <p id="inv1-hum" class="text-3xl font-light text-cyan-400">-- <span class="text-lg text-slate-500">%</span></p>
+                </div>
+            </div>
+            <div class="mt-5 pt-3 border-t border-slate-800 flex gap-2 flex-wrap">
+                <span id="inv1-vent" class="text-[10px] bg-slate-800 text-slate-500 px-2 py-1 rounded border border-slate-700">VENT OFF</span>
+                <span id="inv1-resp" class="text-[10px] bg-slate-800 text-slate-500 px-2 py-1 rounded border border-slate-700">SERVO CLOSE</span>
+            </div>
+        </div>
+
+        <!-- Inv 2 -->
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm font-bold text-white uppercase tracking-wider">Inv 2 <span class="text-slate-500">| Frijol</span></span>
+                <span id="inv2-humid" class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700">HUMID OFF</span>
+            </div>
+            <div class="flex justify-between items-end">
+                <div>
+                    <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Temp</p>
+                    <p id="inv2-temp" class="text-3xl font-light text-white">-- <span class="text-lg text-slate-500">°C</span></p>
+                </div>
+                <div>
+                    <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Hum</p>
+                    <p id="inv2-hum" class="text-3xl font-light text-cyan-400">-- <span class="text-lg text-slate-500">%</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inv 3 -->
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm font-bold text-white uppercase tracking-wider">Inv 3 <span class="text-slate-500">| Lentejas</span></span>
+                <span id="inv3-humid" class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700">HUMID OFF</span>
+            </div>
+            <div class="flex justify-between items-end">
+                <div>
+                    <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Temp</p>
+                    <p id="inv3-temp" class="text-3xl font-light text-white">-- <span class="text-lg text-slate-500">°C</span></p>
+                </div>
+                <div>
+                    <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1">Hum</p>
+                    <p id="inv3-hum" class="text-3xl font-light text-cyan-400">-- <span class="text-lg text-slate-500">%</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function actualizarTelemetria() {
+        fetch('/api/kpis')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('kpi-eficiencia').innerText = data.eficiencia_operativa;
+                document.getElementById('kpi-registros').innerText = data.registros_procesados;
+                document.getElementById('kpi-alertas').innerText = data.alertas_activas;
+                
+                const spanEstado = document.getElementById('kpi-estado');
+                spanEstado.innerText = "ONLINE - " + data.estado_sistema;
+                spanEstado.className = "text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full";
+
+                if (data.detalle) {
+                    const inv1 = data.detalle["1"];
+                    const inv2 = data.detalle["2"];
+                    const inv3 = data.detalle["3"];
+
+                    if (inv1) {
+                        document.getElementById('inv1-temp').innerText = inv1.temperatura;
+                        document.getElementById('inv1-hum').innerText = inv1.humedad;
+                        
+                        document.getElementById('inv1-humid').innerText = inv1.humidificador ? 'HUMID ON' : 'HUMID OFF';
+                        document.getElementById('inv1-humid').className = inv1.humidificador ? 'text-[10px] font-bold px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' : 'text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700';
+                        
+                        document.getElementById('inv1-vent').innerText = inv1.ventilador ? 'VENT ON' : 'VENT OFF';
+                        document.getElementById('inv1-vent').className = inv1.ventilador ? 'text-[10px] px-2 py-1 rounded border bg-amber-500/20 text-amber-400 border-amber-500/30' : 'text-[10px] bg-slate-800 text-slate-500 px-2 py-1 rounded border border-slate-700';
+                        
+                        document.getElementById('inv1-resp').innerText = inv1.respiradero ? 'SERVO 105°' : 'SERVO CLOSE';
+                        document.getElementById('inv1-resp').className = inv1.respiradero ? 'text-[10px] px-2 py-1 rounded border bg-amber-500/20 text-amber-400 border-amber-500/30' : 'text-[10px] bg-slate-800 text-slate-500 px-2 py-1 rounded border border-slate-700';
+                    }
+                    if (inv2) {
+                        document.getElementById('inv2-temp').innerText = inv2.temperatura;
+                        document.getElementById('inv2-hum').innerText = inv2.humedad;
+                        document.getElementById('inv2-humid').innerText = inv2.humidificador ? 'HUMID ON' : 'HUMID OFF';
+                        document.getElementById('inv2-humid').className = inv2.humidificador ? 'text-[10px] font-bold px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' : 'text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700';
+                    }
+                    if (inv3) {
+                        document.getElementById('inv3-temp').innerText = inv3.temperatura;
+                        document.getElementById('inv3-hum').innerText = inv3.humedad;
+                        document.getElementById('inv3-humid').innerText = inv3.humidificador ? 'HUMID ON' : 'HUMID OFF';
+                        document.getElementById('inv3-humid').className = inv3.humidificador ? 'text-[10px] font-bold px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' : 'text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700';
+                    }
+                }
+            })
+            .catch(err => console.error('Error de red al actualizar telemetría:', err));
+    }
+
+    actualizarTelemetria();
+    setInterval(actualizarTelemetria, 5000);
+</script>
+{% endblock %}

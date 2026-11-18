@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Resultados y Conclusiones - PGC Invernaderos{% endblock %}
+{% block content %}
+<div class="space-y-12">
+    <div>
+        <h2 class="text-3xl font-extrabold text-white mb-2">Decisones Operativas y Conclusiones</h2>
+        <p class="text-slate-400">Impacto del proyecto y directrices estratégicas derivadas de la analítica de datos.</p>
+    </div>
+
+    <!-- Decisiones Estratégicas -->
+    <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl">
+            <h3 class="text-xl font-bold text-cyan-400 mb-4">Decisiones Operativas</h3>
+            <ul class="space-y-4 text-sm text-slate-300">
+                <li class="flex items-start gap-3">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 mt-1.5 shrink-0"></span>
+                    <div><strong class="text-white">Automatización de Ventilación:</strong> Activación automática del servomotor (105°) cuando la temperatura excede los 28°C para disipar calor acumulado.</div>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 mt-1.5 shrink-0"></span>
+                    <div><strong class="text-white">Control de Riego Preventivo:</strong> Ajuste de los ciclos del relé humidificador para evitar anegamientos en periodos de alta humedad ambiental.</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl">
+            <h3 class="text-xl font-bold text-emerald-400 mb-4">Conclusiones del Proyecto</h3>
+            <ul class="space-y-4 text-sm text-slate-300">
+                <li class="flex items-start gap-3">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5 shrink-0"></span>
+                    <div><strong class="text-white">Integración Tecnológica:</strong> Se comprobó con éxito la viabilidad de conectar microcontroladores de bajo costo (ESP32) con arquitecturas web en la nube y Business Intelligence.</div>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5 shrink-0"></span>
+                    <div><strong class="text-white">Gestión del Conocimiento:</strong> El sistema permite transformar datos crudos de sensores en información procesable para la toma de decisiones agrícolas.</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

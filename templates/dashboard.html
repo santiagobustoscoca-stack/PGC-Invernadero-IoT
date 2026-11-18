@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Power BI - PGC Invernaderos{% endblock %}
+{% block content %}
+<div class="space-y-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-3xl font-extrabold text-white mb-2">Dashboard Analítico (Power BI)</h2>
+            <p class="text-slate-400">Visualización interactiva del Data Warehouse y comportamiento histórico de los 3 invernaderos.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs font-mono px-3 py-1.5 rounded-lg">1,000,000 Registros</span>
+            <span class="bg-slate-800 text-slate-300 border border-slate-700 text-xs font-mono px-3 py-1.5 rounded-lg">Modelo Estrella</span>
+        </div>
+    </div>
+
+    <!-- Contenedor del Iframe de Power BI -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 via-emerald-500 to-cyan-500"></div>
+        
+        <div class="w-full aspect-video bg-slate-950 rounded-2xl border border-slate-800 flex flex-col items-center justify-center relative overflow-hidden">
+            <!-- 
+                INSTRUCCIÓN: 
+                Reemplaza el atributo 'src' del siguiente iframe con el vínculo de inserción (Publish to Web o Power BI Service Embed) 
+                de tu reporte de Power BI.
+            -->
+            <iframe 
+                title="PGC_Invernadero_IoT_Dashboard" 
+                class="w-full h-full rounded-xl border-0" 
+                src="https://app.powerbi.com/view?r=TU_LINK_DE_POWER_BI_AQUI" 
+                allowFullScreen="true">
+            </iframe>
+            
+            <!-- Mensaje de respaldo por si el usuario aún no pone el link -->
+            <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center pointer-events-none opacity-0 hover:opacity-100 transition-opacity">
+                <p class="text-sm font-bold text-white mb-2">¿Cómo insertar tu reporte?</p>
+                <p class="text-xs text-slate-400 max-w-md">Ve a Power BI Service -> Archivo -> Publicar en la web (o incrustar), copia el enlace URL y pégalo en la propiedad <code class="text-cyan-400">src</code> del elemento iframe en <code class="text-cyan-400">templates/dashboard.html</code>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Resumen Analítico Inferior -->
+    <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+            <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">Filtro Temporal</h3>
+            <p class="text-sm text-slate-300">El reporte permite segmentar las lecturas por rangos horarios de operación continua del ESP32.</p>
+        </div>
+        <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+            <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">Dimensiones Cruzadas</h3>
+            <p class="text-sm text-slate-300">Análisis comparativo directo entre la temperatura ambiental y la respuesta de los relés de humedad.</p>
+        </div>
+        <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+            <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">Exportación de Datos</h3>
+            <p class="text-sm text-slate-300">Soporte para descarga de métricas agregadas en formato tabular para auditoría agronómica.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
